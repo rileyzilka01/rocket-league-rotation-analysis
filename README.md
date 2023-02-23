@@ -1,6 +1,4 @@
-# **CMPUT 466 Project proposal**
-
-## **Rocket League Rotation Analysis**
+# **Rocket League Rotation Analysis**
 
 ### **Description**
 
