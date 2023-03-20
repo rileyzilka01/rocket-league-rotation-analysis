@@ -55,8 +55,8 @@ def download_positional_data():
             response = requests.get(f'https://ballchasing.com/dyn/replay/{fileID}/threejs', headers=headers)
 
             res = str(response.content)
-            length = len(res)
-            parsed = res[6:length-6]
+            pos = res.rfind("}")
+            parsed = res[6:pos+1]
             parsed = '{"' + parsed[0:10] + '":' + parsed[11:] + '}'
 
             parsed = json.loads(parsed)
@@ -85,9 +85,8 @@ def download_timeline_data():
             response = requests.get(f'https://ballchasing.com/dyn/replay/{fileID}/timeline', headers=headers)
 
             res = str(response.content)
-            length = len(res)
-            parsed = res[2:length-3]
-
+            pos = res.rfind("}")
+            parsed = res[2:pos+1]
             parsed = json.loads(parsed)
 
             json_object = json.dumps(parsed, indent=4)
