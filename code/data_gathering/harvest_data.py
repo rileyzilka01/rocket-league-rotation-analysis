@@ -62,7 +62,7 @@ def compile_positional_data():
 
             compiled = {}
 
-            f = open(f'../data/positional-data/{PLAYLIST}/{name}-{i}.json')
+            f = open(f'../../data/positional-data/{PLAYLIST}/{name}-{i}.json')
             data = json.load(f)
 
             compiled = parse_balls(data['replayData']['balls'], compiled)
@@ -73,7 +73,7 @@ def compile_positional_data():
 
             json_object = json.dumps(compiled, indent=4)
 
-            with open(f'../data/extracted-positional-data/{PLAYLIST}/{i}.json', 'w') as f:
+            with open(f'../../data/extracted-positional-data/{PLAYLIST}/{i}.json', 'w') as f:
                 f.write(json_object)
 
         print(f'FINISHED extraction for player {name}')

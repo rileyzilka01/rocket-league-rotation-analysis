@@ -33,7 +33,7 @@ def gather_replays():
         #write the replayIDs dict to a json file
         json_object = json.dumps(replayIDs, indent=4)
 
-        with open(f'../data/replay-ids/{PLAYLIST}/replays-{name}.json', 'w') as f:
+        with open(f'../../data/replay-ids/{PLAYLIST}/replays-{name}.json', 'w') as f:
             f.write(json_object)
 
         print(f'DONE getting replays for {name}')
@@ -45,7 +45,7 @@ def download_positional_data():
     for name in NAMES:
         print(f'STARTED downloading positional data for player {name}...')
 
-        f = open(f'../data/replay-ids/{PLAYLIST}/replays-{name}.json')
+        f = open(f'../../data/replay-ids/{PLAYLIST}/replays-{name}.json')
         data = json.load(f)
 
         for i in data:
@@ -63,7 +63,7 @@ def download_positional_data():
 
             json_object = json.dumps(parsed, indent=4)
 
-            with open(f'../data/positional-data/{PLAYLIST}/{name}-{i}.json', 'w') as f:
+            with open(f'../../data/positional-data/{PLAYLIST}/{name}-{i}.json', 'w') as f:
                 f.write(json_object)
 
         print(f'FINISHED downloading positional data for player {name}')
@@ -75,7 +75,7 @@ def download_timeline_data():
     for name in NAMES:
         print(f'STARTED downloading positional data for player {name}...')
 
-        f = open(f'../data/replay-ids/{PLAYLIST}/replays-{name}.json')
+        f = open(f'../../data/replay-ids/{PLAYLIST}/replays-{name}.json')
         data = json.load(f)
 
         for i in data:
@@ -91,7 +91,7 @@ def download_timeline_data():
 
             json_object = json.dumps(parsed, indent=4)
 
-            with open(f'../data/timeline-data/{PLAYLIST}/{name}-{i}.json', 'w') as f:
+            with open(f'../../data/timeline-data/{PLAYLIST}/{name}-{i}.json', 'w') as f:
                 f.write(json_object)
 
         print(f'FINISHED downloading positional data for player {name}')
@@ -103,7 +103,7 @@ def download_replay_stats():
     for name in NAMES:
         print(f'STARTED downloading replay stats for player {name}...')
 
-        f = open(f'../data/replay-ids/{PLAYLIST}/replays-{name}.json')
+        f = open(f'../../data/replay-ids/{PLAYLIST}/replays-{name}.json')
         data = json.load(f)
 
         for i in data:
@@ -116,7 +116,7 @@ def download_replay_stats():
 
             json_object = json.dumps(response, indent=4)
 
-            with open(f'../data/replay-stats/{PLAYLIST}/{name}-{i}.json', 'w') as f:
+            with open(f'../../data/replay-stats/{PLAYLIST}/{name}-{i}.json', 'w') as f:
                 f.write(json_object)
 
         print(f'FINISHED downloading replay stats for player {name}')
@@ -128,7 +128,7 @@ def download_replay_files():
     for name in NAMES:
         print(f'STARTED downloading replay files for player {name}...')
 
-        f = open(f'../data/replay-ids/{PLAYLIST}/replays-{name}.json')
+        f = open(f'../../data/replay-ids/{PLAYLIST}/replays-{name}.json')
         data = json.load(f)
 
         for i in data:
@@ -137,7 +137,7 @@ def download_replay_files():
             fileID = data[i]['id']
             response = requests.get(f'https://ballchasing.com/api/replays/{fileID}/file', headers=headers)
 
-            with open(f'../data/replays/{PLAYLIST}/{fileID}.replay', 'wb') as f:
+            with open(f'../../data/replays/{PLAYLIST}/{fileID}.replay', 'wb') as f:
                 f.write(response.content)
 
         print(f'FINISHED downloading replay files for player {name}...')
