@@ -9,6 +9,9 @@ FILECOUNT = 40
 class LinearRegression:
 
     def __init__(self, X_train, y_train, X_test, y_test):
+        '''
+        Turn the input data into numpy arrays
+        '''
         self.X_train_x = np.array(X_train[0])
         self.X_train_y = np.array(X_train[1])
         self.X_train_z = np.array(X_train[2])
@@ -24,72 +27,126 @@ class LinearRegression:
 
 
     def closedForm(self):
+        '''
+        Perform closed form linear regression
+        '''
 
+        #Bias
+        self.file = 'linear_regression.txt'
         self.xData()
         self.yData()
         self.zData()
 
+        #Augment the features to absorb the bias term
+        self.file = 'linear_regression_augmented.txt'
+        self.augmentX()
+        self.augmentY()
+        self.augmentZ()
+        self.xData()
+        self.yData()
+        self.zData()
+        
     
     def xData(self):
-        XTX = self.X_train_x.T @ self.X_train_x
-        XTXinv = np.linalg.inv(XTX)
-        XTY = self.X_train_x.T @ self.y_train_x
-        w = XTXinv @ XTY
+        '''
+        Get the weights and statistics for the x axis data and write it to file
+        '''
+        w = self.getWeights(self.X_train_x, self.y_train_x)
 
-        tMSE = np.mean((self.y_train_x - np.dot(self.X_train_x, w))**2)
-        tRMSE = tMSE**(0.5)
-        tMAE = np.mean(self.y_train_x - np.dot(self.X_train_x, w))
+        #t for training, v for validation
+        tMSE, tRMSE, tMAE = self.getStatistics(self.X_train_x, self.y_train_x, w)
+        vMSE, vRMSE, vMAE = self.getStatistics(self.X_test_x, self.y_test_x, w)
 
-        vMSE = np.mean((self.y_test_x - np.dot(self.X_test_x, w))**2)
-        vRMSE = vMSE**(0.5)
-        vMAE = np.mean(self.y_test_x - np.dot(self.X_test_x, w))
-
-        file = open('linear_regression.txt', 'w')
-        file.write(f"Closed Form X")
-        file.write(f"\n\tTraining:\n\t\tMSE: {tMSE}\n\t\tRMSE: {tRMSE}\n\t\tMAE: {tMAE}")
-        file.write(f"\n\n\tValidation:\n\t\tMSE: {vMSE}\n\t\tRMSE: {vRMSE}\n\t\tMAE: {vMAE}")
-        file.close()
+        self.writeStats(tMSE, tRMSE, tMAE, vMSE, vRMSE, vMAE, 'w')
 
 
     def yData(self):
-        XTX = self.X_train_y.T @ self.X_train_y
-        XTXinv = np.linalg.inv(XTX)
-        XTY = self.X_train_y.T @ self.y_train_y
-        w = XTXinv @ XTY
+        '''
+        Get the weights and statistics for the y axis data and write it to file
+        '''
+        w = self.getWeights(self.X_train_y, self.y_train_y)
 
-        tMSE = np.mean((self.y_train_y - np.dot(self.X_train_y, w))**2)
-        tRMSE = tMSE**(0.5)
-        tMAE = np.mean(self.y_train_y - np.dot(self.X_train_y, w))
+        #t for training, v for validation
+        tMSE, tRMSE, tMAE = self.getStatistics(self.X_train_y, self.y_train_y, w)
+        vMSE, vRMSE, vMAE = self.getStatistics(self.X_test_y, self.y_test_y, w)
 
-        vMSE = np.mean((self.y_test_y - np.dot(self.X_test_y, w))**2)
-        vRMSE = vMSE**(0.5)
-        vMAE = np.mean(self.y_test_y - np.dot(self.X_test_y, w))
+        self.writeStats(tMSE, tRMSE, tMAE, vMSE, vRMSE, vMAE, 'a')
 
-        file = open('linear_regression.txt', 'a')
-        file.write(f"\n\nClosed Form Y")
-        file.write(f"\n\tTraining:\n\t\tMSE: {tMSE}\n\t\tRMSE: {tRMSE}\n\t\tMAE: {tMAE}")
-        file.write(f"\n\n\tValidation:\n\t\tMSE: {vMSE}\n\t\tRMSE: {vRMSE}\n\t\tMAE: {vMAE}")
-        file.close()
 
     def zData(self):
-        XTX = self.X_train_z.T @ self.X_train_z
+        '''
+        Get the weights and statistics for the x axis data and write it to file
+        '''
+        w = self.getWeights(self.X_train_z, self.y_train_z)
+
+        #t for training, v for validation
+        tMSE, tRMSE, tMAE = self.getStatistics(self.X_train_y, self.y_train_y, w)
+        vMSE, vRMSE, vMAE = self.getStatistics(self.X_test_y, self.y_test_y, w)
+
+        self.writeStats(tMSE, tRMSE, tMAE, vMSE, vRMSE, vMAE, 'a')
+
+
+    def getWeights(self, X, y):
+        '''
+        Use the closed form method to calculate the w vector
+        '''
+        XTX = X.T @ X
         XTXinv = np.linalg.inv(XTX)
-        XTY = self.X_train_z.T @ self.y_train_z
+        XTY = X.T @ y
         w = XTXinv @ XTY
 
-        tMSE = np.mean((self.y_train_z - np.dot(self.X_train_z, w))**2)
-        tRMSE = tMSE**(0.5)
-        tMAE = np.mean(self.y_train_z - np.dot(self.X_train_z, w))
+        return w
 
-        vMSE = np.mean((self.y_test_z - np.dot(self.X_test_z, w))**2)
-        vRMSE = vMSE**(0.5)
-        vMAE = np.mean(self.y_test_z - np.dot(self.X_test_z, w))
+    def getStatistics(self, X, y, w):
+        '''
+        Calculate the statistics on the regression data
+        '''
+        MSE = np.mean((y - np.dot(X, w))**2)
+        RMSE = MSE**(0.5)
+        MAE = np.mean(np.absolute(y - np.dot(X, w)))
 
-        file = open('linear_regression.txt', 'a')
+        return MSE, RMSE, MAE
+    
+
+    def writeStats(self, tMSE, tRMSE, tMAE, vMSE, vRMSE, vMAE, format):
+        '''
+        Write the statistics to the specified file
+        '''
+        file = open(self.file, format)
         file.write(f"\n\nClosed Form Z")
         file.write(f"\n\tTraining:\n\t\tMSE: {tMSE}\n\t\tRMSE: {tRMSE}\n\t\tMAE: {tMAE}")
         file.write(f"\n\n\tValidation:\n\t\tMSE: {vMSE}\n\t\tRMSE: {vRMSE}\n\t\tMAE: {vMAE}")
         file.close()
+
+
+    def augmentX(self):
+        '''
+        Augment the x data
+        '''
+        self.X_train_x = np.concatenate(
+            (np.ones([self.X_train_x.shape[0], 1]), self.X_train_x), axis=1)
+        self.X_test_x = np.concatenate(
+            (np.ones([self.X_test_x.shape[0], 1]),  self.X_test_x), axis=1)
+
+
+    def augmentY(self):
+        '''
+        Augment the y data
+        '''
+        self.X_train_y = np.concatenate(
+            (np.ones([self.X_train_y.shape[0], 1]), self.X_train_y), axis=1)
+        self.X_test_y = np.concatenate(
+            (np.ones([self.X_test_y.shape[0], 1]),  self.X_test_y), axis=1)
+
+
+    def augmentZ(self):
+        '''
+        Augment the z data
+        '''
+        self.X_train_z = np.concatenate(
+            (np.ones([self.X_train_z.shape[0], 1]), self.X_train_z), axis=1)
+        self.X_test_z = np.concatenate(
+            (np.ones([self.X_test_z.shape[0], 1]),  self.X_test_z), axis=1)
 
 
 def main():
