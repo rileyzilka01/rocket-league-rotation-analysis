@@ -4,6 +4,7 @@ import data
 import matplotlib.pyplot as plt
 
 PLAYLIST = 'ranked-duels'
+DIRECTORY = 'results/'
 FILECOUNT = 40
 
 class PolynomialRegression:
@@ -33,13 +34,13 @@ class PolynomialRegression:
         '''
 
         #Bias
-        self.file = 'polynomial_regression.txt'
+        self.file = f'{DIRECTORY}polynomial_regression.txt'
         self.trainClosedForm(self.X_train_x, self.X_test_x, self.y_train_x, self.y_test_x, 'w', 'X')
         self.trainClosedForm(self.X_train_y, self.X_test_y, self.y_train_y, self.y_test_y, 'a', 'Y')
         self.trainClosedForm(self.X_train_z, self.X_test_z, self.y_train_z, self.y_test_z, 'a', 'Z')
 
         #Augment the features to absorb the bias term
-        self.file = 'polynomial_regression_augmented.txt'
+        self.file = f'{DIRECTORY}polynomial_regression_augmented.txt'
         X_train, X_test = self.augment(self.X_train_x, self.X_test_x)
         self.trainClosedForm(X_train, X_test, self.y_train_x, self.y_test_x, 'w', 'X')
 
@@ -55,23 +56,17 @@ class PolynomialRegression:
         This method will peform gradient descent on the data
         '''
         #Bias
-        self.file = 'gradient_descent.txt'
+        self.file = f'{DIRECTORY}gradient_descent.txt'
         self.trainGradientDescent(self.X_train_x, self.X_test_x, self.y_train_x, self.y_test_x, 'w', 'X')
-        print("Finished gradient descent on x, unaugmented")
         self.trainGradientDescent(self.X_train_y, self.X_test_y, self.y_train_y, self.y_test_y, 'a', 'Y')
         self.trainGradientDescent(self.X_train_z, self.X_test_z, self.y_train_z, self.y_test_z, 'a', 'Z')
 
         #Augment the features to absorb bias term
-        self.file = 'gradient_descent_augmented.txt'
+        self.file = f'{DIRECTORY}gradient_descent_augmented.txt'
         self.augmentFlag = 1
-        X_train, X_test = self.augment(self.X_train_x, self.X_test_x)
-        self.trainGradientDescent(X_train, X_test, self.y_train_x, self.y_test_x, 'w', 'X')
-
-        X_train, X_test = self.augment(self.X_train_y, self.X_test_y)
-        self.trainGradientDescent(X_train, X_test, self.y_train_y, self.y_test_y, 'a', 'Y')
-
-        X_train, X_test = self.augment(self.X_train_z, self.X_test_z)
-        self.trainGradientDescent(X_train, X_test, self.y_train_z, self.y_test_z, 'a', 'Z')
+        self.trainGradientDescent(self.X_train_x, self.X_test_x, self.y_train_x, self.y_test_x, 'w', 'X')
+        self.trainGradientDescent(self.X_train_y, self.X_test_y, self.y_train_y, self.y_test_y, 'a', 'Y')
+        self.trainGradientDescent(self.X_train_z, self.X_test_z, self.y_train_z, self.y_test_z, 'a', 'Z')
         
     
     def trainClosedForm(self, X_train, X_test, y_train, y_test, format, axis):
@@ -158,8 +153,10 @@ class PolynomialRegression:
         '''
         This method will perform gradient descent for the given data
         '''
+        X_train, y_train = self.normalizeInputs(X_train, y_train)
 
-        X_train, X_test, y_train, y_test = self.normalizeInputs(X_train, X_test, y_train, y_test)
+        if self.augmentFlag:
+            X_train, X_test = self.augment(X_train, X_test)
 
         nTrain = X_train.shape[0]
 
@@ -204,16 +201,16 @@ class PolynomialRegression:
         self.writeData(X_test, y_test, wBest, riskBest, lossesTrain, risksTest, axis, format)
 
 
-    def normalizeInputs(self, X_train, X_test, y_train, y_test):
+    def normalizeInputs(self, X_train, y_train):
 
         X_train_norm = (X_train - np.mean(X_train, axis=0)) / np.std(X_train, axis=0)
-        X_test_norm = (X_test - np.mean(X_train, axis=0)) / np.std(X_train, axis=0)
+        #X_test_norm = (X_test - np.mean(X_train, axis=0)) / np.std(X_train, axis=0)
 
         y_train_norm = (y_train - np.mean(y_train)) / np.std(y_train)
-        y_test_norm = (y_test - np.mean(y_train)) / np.std(y_train)
+        #y_test_norm = (y_test - np.mean(y_train)) / np.std(y_train)
 
 
-        return X_train_norm, X_test_norm, y_train_norm, y_test_norm
+        return X_train_norm, y_train_norm
 
 
     def writeData(self, X_test, y_test, wBest, riskBest, lossesTrain, risksTest, axis, format):
@@ -238,14 +235,14 @@ class PolynomialRegression:
         plt.plot(lossesTrain)
         plt.xlabel("Epoch")
         plt.ylabel("Training Loss")
-        plt.savefig(f'training_loss{augmented}_{axis}.jpg')
+        plt.savefig(f'{DIRECTORY}training_loss{augmented}_{axis}.jpg')
 
         #Plot the risk on of the test
         plt.figure()
         plt.plot(risksTest)
         plt.xlabel("Epoch")
         plt.ylabel("Validation Risk")
-        plt.savefig(f'validation_risk{augmented}_{axis}.jpg')
+        plt.savefig(f'{DIRECTORY}validation_risk{augmented}_{axis}.jpg')
 
 
 def main():
@@ -253,7 +250,7 @@ def main():
     X_train, y_train, X_test, y_test = d.getData()
 
     pr = PolynomialRegression(X_train, y_train, X_test, y_test)
-    #pr.closedForm()
+    pr.closedForm()
 
     pr.setGradientParams(100, 20, 0.001, 1)
     pr.gradientDescent()
