@@ -1,0 +1,13 @@
+
+
+Closed Form X
+	Validation performance: 0.3354813374271639
+	Test performance: 0.3354813374271639
+
+Closed Form Y
+	Validation performance: 0.30273860081551296
+	Test performance: 0.30273860081551296
+
+Closed Form Z
+	Validation performance: 0.521741838702021
+	Test performance: 0.521741838702021

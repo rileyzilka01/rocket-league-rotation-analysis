@@ -1,0 +1,3 @@
+ - fix augmented gradient descent
+
+ - Using TF use a neural network for fine tuning

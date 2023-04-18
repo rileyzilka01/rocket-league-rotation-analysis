@@ -5,10 +5,11 @@ import json
 
 class Data:
 
-    def __init__(self, playlist, fileCount):
+    def __init__(self, playlist, fileCount, batchSize):
         
         self.__playlist = playlist
         self.__fileCount = fileCount+1
+        self.__batchSize = batchSize
 
         seed = np.random.randint(0, 100000)
         self.__seed = seed
@@ -115,9 +116,11 @@ class Data:
         '''
         This method will take in all the X data and all the target y data and segment it into the training and test sets
         '''
-
-        X_train, y_train, X_test, y_test = None, None, None, None
-
+        #Create nicely sized data for gradient descent purposes
+        remainder = len(X[0]) % self.__batchSize
+        maxLen = len(X[0])-remainder
+        X = [X[0][:maxLen], X[1][:maxLen], X[2][:maxLen]]
+        y = [y[0][:maxLen], y[1][:maxLen], y[2][:maxLen]]
 
         testSize = len(X[0])//10
 
