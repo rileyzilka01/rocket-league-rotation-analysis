@@ -4,7 +4,7 @@ import data
 import matplotlib.pyplot as plt
 
 PLAYLIST = 'ranked-duels'
-DIRECTORY = 'results/'
+DIRECTORY = 'results/polynomial_regression/'
 FILECOUNT = 40
 
 class PolynomialRegression:
@@ -202,13 +202,13 @@ class PolynomialRegression:
 
 
     def normalizeInputs(self, X_train, y_train):
+        '''
+        This method will normalize the inputs to scale down
+        '''
 
         X_train_norm = (X_train - np.mean(X_train, axis=0)) / np.std(X_train, axis=0)
-        #X_test_norm = (X_test - np.mean(X_train, axis=0)) / np.std(X_train, axis=0)
 
         y_train_norm = (y_train - np.mean(y_train)) / np.std(y_train)
-        #y_test_norm = (y_test - np.mean(y_train)) / np.std(y_train)
-
 
         return X_train_norm, y_train_norm
 
@@ -223,7 +223,7 @@ class PolynomialRegression:
         #Save Numbers to file
         file = open(self.file, format)
         file.write(f"\n\nClosed Form {axis}")
-        file.write(f"\n\tValidation performance: {riskBest}\n\tTest performance: {t}")
+        file.write(f"\n\tTraining performance: {riskBest}\n\tTest performance: {t}")
         file.close()
 
         augmented = ""
