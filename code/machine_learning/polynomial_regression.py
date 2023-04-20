@@ -155,7 +155,7 @@ class PolynomialRegression:
         '''
         X_train, y_train = self.normalizeInputs(X_train, y_train)
 
-        if self.augmentFlag:
+        if self.augmentFlag == 1:
             X_train, X_test = self.augment(X_train, X_test)
 
         nTrain = X_train.shape[0]
@@ -222,7 +222,7 @@ class PolynomialRegression:
 
         #Save Numbers to file
         file = open(self.file, format)
-        file.write(f"\n\nClosed Form {axis}")
+        file.write(f"\n\nGradient Descent {axis}")
         file.write(f"\n\tTraining performance: {riskBest}\n\tTest performance: {t}")
         file.close()
 
@@ -235,6 +235,7 @@ class PolynomialRegression:
         plt.plot(lossesTrain)
         plt.xlabel("Epoch")
         plt.ylabel("Training Loss")
+        plt.title(f'Training Loss: {axis}')
         plt.savefig(f'{DIRECTORY}training_loss{augmented}_{axis}.jpg')
 
         #Plot the risk on of the test
@@ -242,6 +243,7 @@ class PolynomialRegression:
         plt.plot(risksTest)
         plt.xlabel("Epoch")
         plt.ylabel("Validation Risk")
+        plt.title(f'Validation Risk: {axis}')
         plt.savefig(f'{DIRECTORY}validation_risk{augmented}_{axis}.jpg')
 
 
@@ -250,7 +252,7 @@ def main():
     X_train, y_train, X_test, y_test = d.getData()
 
     pr = PolynomialRegression(X_train, y_train, X_test, y_test)
-    pr.closedForm()
+    #pr.closedForm()
 
     pr.setGradientParams(100, 20, 0.001, 1)
     pr.gradientDescent()

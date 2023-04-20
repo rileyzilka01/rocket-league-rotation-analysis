@@ -88,7 +88,7 @@ class NeuralNetwork():
         testLoss = model.evaluate(X_test, y_test, verbose=0)
 
         file = open(self.file, format)
-        file.write(f"\n\nClosed Form {axis}")
+        file.write(f"\n\nNeural Network {axis}")
         file.write(f"\n\tTraining Loss: {trainingLoss}\n\tTest Loss: {testLoss}")
         file.close()
 
