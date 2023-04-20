@@ -4,6 +4,8 @@ The link below is the project report
 
 https://github.com/rileyzilka01/rocket-league-rotation-analysis/blob/main/doc/CMPUT%20466%20Project%20Report.pdf
 
+[embed]https://github.com/rileyzilka01/rocket-league-rotation-analysis/blob/main/doc/CMPUT%20466%20Project%20Report.pdf[/embed]
+
 ### **Description**
 
 To understand this project, Rocket League is a team game about playing soccer with cars, competitive Rocket League consists of three players per team and one ball. Players drive around the pitch and try to hit the ball into the net much like normal soccer. There are many aspects such as boost collection, demolitions, bumping, flying through the air etc.
